@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 //Gerenciamento de Estado com Context API
 export const AuthContext = createContext();
@@ -9,19 +9,43 @@ export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     isAuthenticated: false,
     user: null,
+    token: null,
   });
-  // atualizando autenticação
-  const login = (user) => {
+
+  //Carregando estato autenticação localstorage
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (token && user) {
+      setAuthState({
+        isAuthenticated: true,
+        user: user,
+        token: token,
+      });
+    }
+  }, []);
+
+  // atualizando autenticação e armazenamento localstorage
+  const login = (user, token) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
     setAuthState({
       isAuthenticated: true,
       user: user,
+      token: token,
     });
   };
-  //logout
+
+  //logout , limpando estado e removendo localstorage
   const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setAuthState({
       isAuthenticated: false,
       user: null,
+      token: null,
     });
   };
 

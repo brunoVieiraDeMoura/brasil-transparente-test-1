@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { register } from "../services/api";
+import { AuthContext } from "../context/AuthContext";
 
 const Register = () => {
   //state para formulario
+  const { login } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -21,6 +23,7 @@ const Register = () => {
     e.preventDeault();
     try {
       const newUser = await register(formData);
+      login(newUser);
       console.log("Usuario Registrado", newUser);
     } catch (err) {
       console.error("Erro ao registrar", err);

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { login } from "../services/api";
+import { AuthContext } from "../context/AuthContext";
 
 //Login
 const Login = () => {
   // definindo state form
+  const { login: authLogin } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,6 +25,7 @@ const Login = () => {
     try {
       // function login e save login
       const user = await login(formData);
+      authLogin(user.user, user.token);
       console.log("Usuário logado", user);
     } catch (err) {
       console.error("Erro ao logar", err);
@@ -49,3 +52,5 @@ const Login = () => {
     </form>
   );
 };
+
+export default Login;
