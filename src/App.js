@@ -4,7 +4,20 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 
 const App = () => {
-  return <Router></Router>;
+  return (
+    <Router>
+      <div className="App">
+        <Switch>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  );
 };
 
 export default App;
