@@ -24,7 +24,7 @@ const Register = () => {
 
   //funcao para lidar com envio de form
   const handleSubmit = async (e) => {
-    e.preventDeault();
+    e.preventDefault();
     setLoadging(true);
     setError("");
     try {
@@ -62,7 +62,7 @@ const Register = () => {
         value={formData.password}
         onChange={handleChange}
       />
-      <button type="submit" disable={loading}>
+      <button type="submit" disabled={loading}>
         {loading ? "Registrando..." : "Registre-se"}
       </button>
       {error && <p style={{ color: "red" }}>{error}</p>}
