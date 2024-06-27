@@ -11,6 +11,9 @@ const Login = () => {
     password: "",
   });
 
+  const [loading, setLoadging] = useState(false);
+  const [error, setError] = useState("");
+
   //Função form change
   const handleChange = (e) => {
     setFormData({
@@ -22,13 +25,18 @@ const Login = () => {
   // função envio form
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadging(true);
+    setError("");
     try {
       // function login e save login
       const user = await login(formData);
       authLogin(user.user, user.token);
       console.log("Usuário logado", user);
     } catch (err) {
+      setError("Erro ao logar. Por favor, tente novamente.");
       console.error("Erro ao logar", err);
+    } finally {
+      setLoadging(false);
     }
   };
 
@@ -48,7 +56,10 @@ const Login = () => {
         value={formData.password}
         onChange={handleChange}
       />
-      <button type="submit">Login</button>
+      <button type="submit" disabled={loading}>
+        {loading ? "Entrando..." : "Entrar"}
+      </button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
 };

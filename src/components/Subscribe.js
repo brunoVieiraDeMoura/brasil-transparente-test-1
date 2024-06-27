@@ -25,7 +25,7 @@ const Subscribe = () => {
       const response = await axios.post(
         "http://localhost:5000/api/subscriptions/subscribe",
         { planId },
-        { headers: { userId: authState.user._id } }
+        { headers: { Authorization: `Bearer ${authState.token}` } }
       );
       console.log("Inscrevendo-se no plano:", response.data);
     } catch (err) {

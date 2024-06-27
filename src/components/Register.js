@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { register } from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 
@@ -10,6 +10,10 @@ const Register = () => {
     email: "",
     password: "",
   });
+
+  const [loading, setLoadging] = useState(false);
+  const [error, setError] = useState("");
+
   // function para manupular dados do form
   const handleChange = (e) => {
     setFormData({
@@ -21,14 +25,20 @@ const Register = () => {
   //funcao para lidar com envio de form
   const handleSubmit = async (e) => {
     e.preventDeault();
+    setLoadging(true);
+    setError("");
     try {
       const newUser = await register(formData);
       login(newUser.user, newUser.token);
       console.log("Usuario Registrado", newUser);
     } catch (err) {
+      setError("Erro ao registrar. Por favor, tente novamente.");
       console.error("Erro ao registrar", err);
+    } finally {
+      setLoadging(false);
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -52,7 +62,10 @@ const Register = () => {
         value={formData.password}
         onChange={handleChange}
       />
-      <button type="submit">Registrar</button>
+      <button type="submit" disable={loading}>
+        {loading ? "Registrando..." : "Registre-se"}
+      </button>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </form>
   );
 };
