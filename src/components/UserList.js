@@ -1,21 +1,33 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import io from "socket.io-client";
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/users"
-        );
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar usuários", error);
-      }
+    const socket = io("http://localhost:5000");
+
+    socket.on("connect", () => {
+      console.log("Conectado ao servidor WebSocket");
+    });
+
+    socket.on("users", (data) => {
+      setUsers(data);
+    });
+
+    socket.on("newUser", (user) => {
+      setUsers((prevUsers) => [...prevUsers, user]);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Desconectado do servidor WebSocket");
+    });
+
+    return () => {
+      socket.off("users");
+      socket.off("newUser");
+      socket.disconnect();
     };
-    fetchUsers();
   }, []);
 
   return (
