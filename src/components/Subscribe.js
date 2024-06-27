@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 const Subscribe = () => {
   const [plans, setPlans] = useState([]);
-
+  const { authState } = useContext(AuthContext);
   //function para buscar os planos da api
   useEffect(() => {
     const fetchPlans = async () => {
@@ -21,7 +22,12 @@ const Subscribe = () => {
   }, []);
   const handleSubscribe = async (planId) => {
     try {
-      console.log(`Inscrevendo-se no plano ${planId}`);
+      const response = await axios.post(
+        "http://localhost:5000/api/subscriptions/subscribe",
+        { planId },
+        { headers: { userId: authState.user._id } }
+      );
+      console.log("Inscrevendo-se no plano:", response.data);
     } catch (err) {
       console.error("Erro ao se inscrever", err);
     }

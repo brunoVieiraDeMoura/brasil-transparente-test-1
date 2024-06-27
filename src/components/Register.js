@@ -23,7 +23,7 @@ const Register = () => {
     e.preventDeault();
     try {
       const newUser = await register(formData);
-      login(newUser);
+      login(newUser.user, newUser.token);
       console.log("Usuario Registrado", newUser);
     } catch (err) {
       console.error("Erro ao registrar", err);
